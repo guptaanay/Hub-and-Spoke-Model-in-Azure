@@ -1,0 +1,143 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "hubVnetName": {
+            "type": "string",
+            "defaultValue": "hubVnet",
+            "metadata": {
+                "description": "Name of the Hub VNet."
+            }
+        },
+        "spoke1VnetName": {
+            "type": "string",
+            "defaultValue": "spoke1Vnet",
+            "metadata": {
+                "description": "Name of Spoke 1 VNet."
+            }
+        },
+        "spoke2VnetName": {
+            "type": "string",
+            "defaultValue": "spoke2Vnet",
+            "metadata": {
+                "description": "Name of Spoke 2 VNet."
+            }
+        },
+        "hubAddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.0.0.0/16",
+            "metadata": {
+                "description": "Address prefix for the Hub VNet."
+            }
+        },
+        "spoke1AddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.1.0.0/16",
+            "metadata": {
+                "description": "Address prefix for Spoke 1 VNet."
+            }
+        },
+        "spoke2AddressPrefix": {
+            "type": "string",
+            "defaultValue": "10.2.0.0/16",
+            "metadata": {
+                "description": "Address prefix for Spoke 2 VNet."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('hubVnetName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('hubAddressPrefix')]"
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('spoke1VnetName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubVnetName'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('spoke1AddressPrefix')]"
+                    ]
+                },
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "toHub",
+                        "properties": {
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubVnetName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('spoke2VnetName')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubVnetName'))]"
+            ],
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('spoke2AddressPrefix')]"
+                    ]
+                },
+                "virtualNetworkPeerings": [
+                    {
+                        "name": "toHub",
+                        "properties": {
+                            "allowForwardedTraffic": false,
+                            "allowGatewayTransit": false,
+                            "allowVirtualNetworkAccess": true,
+                            "remoteVirtualNetwork": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubVnetName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "hubVnetId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('hubVnetName'))]"
+        },
+        "spoke1VnetId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('spoke1VnetName'))]"
+        },
+        "spoke2VnetId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('spoke2VnetName'))]"
+        }
+    }
+}
