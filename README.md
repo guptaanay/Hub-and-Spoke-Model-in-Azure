@@ -100,6 +100,6 @@ az network vnet peering create \
 * Ping Test: Verify connectivity by pinging VMs in different spokes via the hub.
 * Traffic Monitoring: Use Azure Monitor and Network Watcher to monitor traffic and logs for security analysis.
 
-  ## Conlusion
+  ## Conclusion
 
 The hub and spoke model in Azure provides a scalable, secure, and manageable network architecture. By centralizing connectivity and security in the hub, organizations can simplify their cloud infrastructure management while ensuring consistent security and efficient traffic routing
