@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "YourAzureRegion",
+            "metadata": {
+                "description": "Location for all resources."
+            }
+        },
+        "hubVnetName": {
+            "value": "hubVnet",
+            "metadata": {
+                "description": "Name of the Hub VNet."
+            }
+        },
+        "spoke1VnetName": {
+            "value": "spoke1Vnet",
+            "metadata": {
+                "description": "Name of Spoke 1 VNet."
+            }
+        },
+        "spoke2VnetName": {
+            "value": "spoke2Vnet",
+            "metadata": {
+                "description": "Name of Spoke 2 VNet."
+            }
+        },
+        "hubAddressPrefix": {
+            "value": "10.0.0.0/16",
+            "metadata": {
+                "description": "Address prefix for the Hub VNet."
+            }
+        },
+        "spoke1AddressPrefix": {
+            "value": "10.1.0.0/16",
+            "metadata": {
+                "description": "Address prefix for Spoke 1 VNet."
+            }
+        },
+        "spoke2AddressPrefix": {
+            "value": "10.2.0.0/16",
+            "metadata": {
+                "description": "Address prefix for Spoke 2 VNet."
+            }
+        }
+    }
+}
